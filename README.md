@@ -2,6 +2,8 @@
 
 > Laboratoire DevOps/SRE complet pour démontrer la mise en place d'une infrastructure résiliente, supervisée et testée contre les pannes (**Chaos Engineering**) sur Kubernetes.
 
+[![Kubernetes Lab CI](https://github.com/TON_NOM_UTILISATEUR/k8s-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/enguer2/k8s-lab/actions/workflows/ci.yml)
+
 ---
 
 ## 🎯 Objectifs du Projet

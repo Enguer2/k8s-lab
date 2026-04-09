@@ -1,0 +1,46 @@
+name: Kubernetes Lab CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-infrastructure:
+    name: Deploy and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code fetching
+        uses: actions/checkout@v4
+
+      - name: Kind install
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
+      - name: Cluster create
+        run: make up
+
+      - name: NGINX Deployment
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+      - name: PODS waiting status
+        run: |
+          kubectl rollout status deployment/app-cobaye --timeout=120s
+          kubectl get pods -o wide
+
+      - name: Test application
+        run: |
+          curl --fail -s http://localhost:30080 > /dev/null
+          echo "Success"
+
+      - name: Debug logs (if fails)
+        if: failure()
+        run: |
+          kubectl describe pods
+          kubectl logs deployment/app-cobaye
