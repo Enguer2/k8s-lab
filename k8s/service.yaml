@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: web
+spec:
+  type: NodePort # Obligatoire pour accéder à l'app depuis ton localhost via Kind
+  selector:
+    app: web # Fait le lien avec les labels du Deployment
+  ports:
+    - protocol: TCP
+      port: 80 # Le port du service en interne
+      targetPort: 80 # Le port du conteneur Nginx
+      nodePort: 30080 # Le fameux port qu'on a configuré dans kind-config.yaml
